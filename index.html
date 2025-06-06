@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KageBuzzer</title>
+    <title>KageBuzzer - Glowing</title>
     <style>
         /* --- Tema Dasar & Latar Belakang --- */
         body {
@@ -126,11 +126,21 @@
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
         }
     </style>
+    
     <script>
         function updateOptions() {
             const itemType = document.getElementById("itemType").value;
             const options = document.getElementById("options");
-            options.innerHTML = "";
+            options.innerHTML = ""; // Selalu kosongkan pilihan saat item utama diganti
+
+            // Kumpulan pilihan yang bisa dipakai ulang
+            const socialMediaOptions = `
+                <option value="Tiktok">Tiktok</option>
+                <option value="YouTube">YouTube</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Facebook">Facebook</option>
+                <option value="X">X</option>
+            `;
 
             if (itemType === "Report Akun") {
                 options.innerHTML = `<option value="Report Tiktok">Report Tiktok</option><option value="Report Instagram">Report Instagram</option><option value="Report X">Report X</option><option value="Report WhatsApp">Report WhatsApp</option><option value="Report YouTube">Report YouTube</option><option value="Lainnya">Lainnya</option>`;
@@ -138,7 +148,26 @@
                 options.innerHTML = `<option value="Spam chat 1x kasar">Spam chat 1x kasar (Rp 850)</option><option value="Spam chat 1x tidak">Spam chat 1x tidak (Rp 800)</option><option value="Spam chat 3x kasar">Spam chat 3x kasar (Rp 1000)</option><option value="Spam chat 3x tidak">Spam chat 3x tidak (Rp 900)</option><option value="Spam chat 5x kasar">Spam chat 5x kasar (Rp 1250)</option><option value="Spam chat 5x tidak">Spam chat 5x tidak (Rp 1100)</option>`;
             } else if (itemType === "Spam Call") {
                 options.innerHTML = `<option value="Spam call 1x">Spam call 1x (Rp 700)</option><option value="Spam call 2x">Spam call 2x (Rp 750)</option><option value="Spam call 3x">Spam call 3x (Rp 800)</option><option value="Spam call 5x">Spam call 5x (Rp 900)</option>`;
+            } else if (itemType === "Vote Aplikasi") {
+                options.innerHTML = `
+                    <option value="Vote Instagram">Vote Instagram</option>
+                    <option value="Vote YouTube">Vote YouTube</option>
+                    <option value="Vote Tiktok">Vote Tiktok</option>
+                    <option value="Vote WhatsApp">Vote WhatsApp</option>
+                    <option value="Vote X">Vote X</option>
+                    <option value="Vote Facebook">Vote Facebook</option>
+                `;
+            } else if (
+                itemType === "Komen Nonfollowers/Acak" ||
+                itemType === "Komen 20 Followers" ||
+                itemType === "Komen 50 Followers+Profil" ||
+                itemType === "Komen 100 Followers+Profil"
+            ) {
+                options.innerHTML = socialMediaOptions;
+            } else if (itemType === "Follow") {
+                 options.innerHTML = socialMediaOptions + `<option value="WhatsApp">WhatsApp</option>`; // Follow punya semua opsi medsos
             }
+            // Untuk "Vote Web", tidak ada 'else if' sehingga pilihan akan tetap kosong, yang mana sudah benar.
         }
 
         function calculatePrice() {
@@ -147,15 +176,25 @@
             const selectedOption = document.getElementById("options").value;
             let price = 0;
 
-            if (itemType === "Report Akun") { price = 500; }
+            if (itemType === "Report Akun") { price = 500; } 
             else if (itemType === "Spam Chat") {
                 if (selectedOption.includes("1x kasar")) price = 850; else if (selectedOption.includes("1x tidak")) price = 800; else if (selectedOption.includes("3x kasar")) price = 1000; else if (selectedOption.includes("3x tidak")) price = 900; else if (selectedOption.includes("5x kasar")) price = 1250; else if (selectedOption.includes("5x tidak")) price = 1100;
             } else if (itemType === "Spam Call") {
                 if (selectedOption.includes("1x")) price = 700; else if (selectedOption.includes("2x")) price = 750; else if (selectedOption.includes("3x")) price = 800; else if (selectedOption.includes("5x")) price = 900;
-            }
+            } 
+            // --- HARGA UNTUK ITEM BARU ---
+            else if (itemType === "Vote Aplikasi") { price = 500; } 
+            else if (itemType === "Vote Web") { price = 900; }
+            else if (itemType === "Komen Nonfollowers/Acak") { price = 500; }
+            else if (itemType === "Komen 20 Followers") { price = 600; }
+            else if (itemType === "Komen 50 Followers+Profil") { price = 800; }
+            else if (itemType === "Komen 100 Followers+Profil") { price = 950; }
+            else if (itemType === "Follow") { price = 500; }
+
             document.getElementById("totalPrice").value = price * quantity;
         }
 
+        // Fungsi submitForm tidak perlu diubah, karena sudah dinamis
         function submitForm(event) {
             event.preventDefault();
             const name = document.getElementById("name").value;
@@ -204,9 +243,16 @@
                 <option value="Report Akun">Report Akun</option>
                 <option value="Spam Chat">Spam Chat</option>
                 <option value="Spam Call">Spam Call</option>
+                <option value="Follow">Follow</option>
+                <option value="Vote Aplikasi">Vote Aplikasi</option>
+                <option value="Vote Web">Vote Web</option>
+                <option value="Komen Nonfollowers/Acak">Komen Nonfollowers/Acak</option>
+                <option value="Komen 20 Followers">Komen 20 Followers</option>
+                <option value="Komen 50 Followers+Profil">Komen 50 Followers+Profil</option>
+                <option value="Komen 100 Followers+Profil">Komen 100 Followers+Profil</option>
             </select>
 
-            <label for="options">Pilihan:</label>
+            <label for="options">Pilihan Platform:</label>
             <select id="options" name="options" onchange="calculatePrice()" required>
                 <option value="">Pilih...</option>
             </select>
