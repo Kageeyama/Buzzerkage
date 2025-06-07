@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KageBuzzer - Glowing</title>
+    <title>KageBuzzer</title>
     <style>
         /* --- Tema Dasar & Latar Belakang --- */
         body {
@@ -204,7 +204,7 @@
             const quantity = document.getElementById("quantity").value;
             const totalPrice = document.getElementById("totalPrice").value;
             const description = document.getElementById("description").value || "Tidak ada";
-            const instanceId = "instance124153"; const token = "9pq0mclkqkwdfs68"; const adminWhatsapp = "6288221258850";
+            const instanceId = "instance124153"; const token = "9pq0mclkqkwdfs68"; const adminWhatsapp = "6288983572573";
             const apiUrl = `https://api.ultramsg.com/${instanceId}/messages/chat`;
             const adminMessageBody = `🔔 *Pesanan Baru KageBuzzer* 🔔\n\n*Nama Pelanggan:* ${name}\n*No. WhatsApp:* ${buyerWhatsapp}\n------------------------------\n*Jenis Barang:* ${itemType}\n*Pilihan:* ${options}\n*Jumlah:* ${quantity}\n*Total Harga:* Rp ${totalPrice}\n------------------------------\n*Deskripsi/Target:*\n${description}\n\nMohon untuk segera diproses.`;
             const buyerMessageBody = `Halo ${name},\n\nTerima kasih telah melakukan pemesanan di *KageBuzzer*. Pesanan Anda telah kami terima dan akan segera diproses.\n\n*Detail Pesanan:*\n- Layanan: ${itemType}\n- Total: *Rp ${totalPrice}*\n\nAdmin kami akan segera menghubungi Anda dari nomor ${adminWhatsapp} untuk konfirmasi dan instruksi selanjutnya.\n\nTerima kasih!`;
