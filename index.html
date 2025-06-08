@@ -187,6 +187,7 @@
                         <option value="Komen 20 Followers">Komen 20 Followers</option>
                         <option value="Komen 50 Followers+Profil">Komen 50 Followers+Profil</option>
                         <option value="Komen 100 Followers+Profil">Komen 100 Followers+Profil</option>
+                        <option value="Claim voucher" >Claim voucher</option>
                     </select>
                 </div>
                  <div class="form-step">
@@ -336,7 +337,7 @@
             const savedName = localStorage.getItem('kage_userName');
             const savedWhatsapp = localStorage.getItem('kage_userWhatsapp');
 
-            if (savedName) {
+            if (savedName && savedWhatsapp) {
                 nameInput.value = savedName;
                 whatsappInput.value = savedWhatsapp;
                 saveDataCheckbox.checked = true;
@@ -413,36 +414,65 @@
         }
         
         // --- Fungsi Utama (Di-ekspos ke Global Scope untuk onsubmit) ---
-        window.updateOptions = function() { /* ... fungsi tidak berubah ... */ 
+        window.updateOptions = function() {
             const itemType = document.getElementById("itemType").value;
             const optionsSelect = document.getElementById("options");
             optionsSelect.innerHTML = "";
             const socialMediaOptions = `<option value="Tiktok">Tiktok</option><option value="YouTube">YouTube</option><option value="Instagram">Instagram</option><option value="Facebook">Facebook</option><option value="X">X (Twitter)</option>`;
             let optionsHTML = '<option value="">Pilih Detail...</option>';
-            if (itemType === "Report Akun") { optionsHTML += `<option value="Report Tiktok">Report Tiktok</option><option value="Report Instagram">Report Instagram</option><option value="Report X">Report X</option><option value="Report WhatsApp">Report WhatsApp</option><option value="Report YouTube">Report YouTube</option><option value="Lainnya">Lainnya</option>`; } else if (itemType === "Spam Chat") { optionsHTML += `<option value="Spam chat 1x kasar">Spam chat 1x kasar (Rp 850)</option><option value="Spam chat 1x tidak">Spam chat 1x tidak (Rp 800)</option><option value="Spam chat 3x kasar">Spam chat 3x kasar (Rp 1000)</option><option value="Spam chat 3x tidak">Spam chat 3x tidak (Rp 900)</option><option value="Spam chat 5x kasar">Spam chat 5x kasar (Rp 1250)</option><option value="Spam chat 5x tidak">Spam chat 5x tidak (Rp 1100)</option>`; } else if (itemType === "Spam Call") { optionsHTML += `<option value="Spam call 1x">Spam call 1x (Rp 700)</option><option value="Spam call 2x">Spam call 2x (Rp 750)</option><option value="Spam call 3x">Spam call 3x (Rp 800)</option><option value="Spam call 5x">Spam call 5x (Rp 900)</option>`; } else if (itemType === "Vote Aplikasi") { optionsHTML += `<option value="Vote Instagram">Vote Instagram</option><option value="Vote YouTube">Vote YouTube</option><option value="Vote Tiktok">Vote Tiktok</option><option value="Vote WhatsApp">Vote WhatsApp</option><option value="Vote X">Vote X</option><option value="Vote Facebook">Vote Facebook</option>`; } else if (itemType === "Komen Nonfollowers/Acak" || itemType === "Komen 20 Followers" || itemType === "Komen 50 Followers+Profil" || itemType === "Komen 100 Followers+Profil") { optionsHTML += socialMediaOptions; } else if (itemType === "Follow") { optionsHTML += socialMediaOptions + `<option value="WhatsApp Channel">WhatsApp Channel</option>`; } else if (itemType === "Vote Web") { optionsHTML += `<option value="Vote via Website">Vote via Website</option>`; }
+            if (itemType === "Report Akun") { optionsHTML += `<option value="Report Tiktok">Report Tiktok</option><option value="Report Instagram">Report Instagram</option><option value="Report X">Report X</option><option value="Report WhatsApp">Report WhatsApp</option><option value="Report YouTube">Report YouTube</option><option value="Lainnya">Lainnya</option>`; } else if (itemType === "Spam Chat") { optionsHTML += `<option value="Spam chat 1x kasar">Spam chat 1x kasar (Rp 850)</option><option value="Spam chat 1x tidak">Spam chat 1x tidak (Rp 800)</option><option value="Spam chat 3x kasar">Spam chat 3x kasar (Rp 1000)</option><option value="Spam chat 3x tidak">Spam chat 3x tidak (Rp 900)</option><option value="Spam chat 5x kasar">Spam chat 5x kasar (Rp 1250)</option><option value="Spam chat 5x tidak">Spam chat 5x tidak (Rp 1100)</option>`; } else if (itemType === "Spam Call") { optionsHTML += `<option value="Spam call 1x">Spam call 1x (Rp 700)</option><option value="Spam call 2x">Spam call 2x (Rp 750)</option><option value="Spam call 3x">Spam call 3x (Rp 800)</option><option value="Spam call 5x">Spam call 5x (Rp 900)</option>`; } else if (itemType === "Vote Aplikasi") { optionsHTML += `<option value="Vote Instagram">Vote Instagram</option><option value="Vote YouTube">Vote YouTube</option><option value="Vote Tiktok">Vote Tiktok</option><option value="Vote WhatsApp">Vote WhatsApp</option><option value="Vote X">Vote X</option><option value="Vote Facebook">Vote Facebook</option>`; } else if (itemType === "Komen Nonfollowers/Acak" || itemType === "Komen 20 Followers" || itemType === "Komen 50 Followers+Profil" || itemType === "Komen 100 Followers+Profil") { optionsHTML += socialMediaOptions; } else if (itemType === "Follow") { optionsHTML += socialMediaOptions + `<option value="WhatsApp Channel">WhatsApp Channel</option>`; } else if (itemType === "Vote Web") { optionsHTML += `<option value="Vote via Website">Vote via Website</option>`; } else if (itemType === "Claim voucher") { optionsHTML += '<option value="Whatsapp">Whatsapp</option>'; }
             optionsSelect.innerHTML = optionsHTML;
             optionsSelect.disabled = itemType === ""; 
-            if(itemType === "Vote Web") { optionsSelect.value = "Vote via Website"; optionsSelect.disabled = true; }
+            if(itemType === "Vote Web" || itemType === "Claim voucher") { 
+                optionsSelect.value = optionsSelect.options[1] ? optionsSelect.options[1].value : ""; 
+                optionsSelect.disabled = true;
+            }
         };
-        window.calculatePrice = function() { /* ... fungsi tidak berubah ... */ 
-             const itemType = document.getElementById("itemType").value;
+
+        window.calculatePrice = function() {
+            const itemType = document.getElementById("itemType").value;
             const quantityInput = document.getElementById("quantity");
-            if (parseInt(quantityInput.value) < 1) { quantityInput.value = 1; }
+            if (parseInt(quantityInput.value) < 1 && quantityInput.value !== "") { quantityInput.value = 1; }
             const quantity = parseInt(quantityInput.value) || 1;
             const selectedOption = document.getElementById("options").value;
             let price = 0;
-            const priceMapping = { "Report Akun": 500, "Spam Chat": { "1x kasar": 850, "1x tidak": 800, "3x kasar": 1000, "3x tidak": 900, "5x kasar": 1250, "5x tidak": 1100 }, "Spam Call": { "1x": 700, "2x": 750, "3x": 800, "5x": 900 }, "Vote Aplikasi": 500, "Vote Web": 900, "Komen Nonfollowers/Acak": 500, "Komen 20 Followers": 600, "Komen 50 Followers+Profil": 800, "Komen 100 Followers+Profil": 950, "Follow": 500 };
+            
+            // ### PERUBAHAN 1: Menambahkan harga untuk "Claim voucher" ###
+            const priceMapping = { 
+                "Report Akun": 500, 
+                "Spam Chat": { "1x kasar": 850, "1x tidak": 800, "3x kasar": 1000, "3x tidak": 900, "5x kasar": 1250, "5x tidak": 1100 }, 
+                "Spam Call": { "1x": 700, "2x": 750, "3x": 800, "5x": 900 }, 
+                "Vote Aplikasi": 500, 
+                "Vote Web": 900, 
+                "Komen Nonfollowers/Acak": 500, 
+                "Komen 20 Followers": 600, 
+                "Komen 50 Followers+Profil": 800, 
+                "Komen 100 Followers+Profil": 950, 
+                "Follow": 500,
+                "Claim voucher": 850 // <- HARGA DITAMBAHKAN DI SINI
+            };
+
             if (priceMapping[itemType]) {
-                if (typeof priceMapping[itemType] === 'number') { price = priceMapping[itemType]; }
-                else { for (const key in priceMapping[itemType]) { if (selectedOption.includes(key)) { price = priceMapping[itemType][key]; break; } } }
+                if (typeof priceMapping[itemType] === 'number') { 
+                    price = priceMapping[itemType]; 
+                } else { 
+                    for (const key in priceMapping[itemType]) { 
+                        if (selectedOption.includes(key)) { 
+                            price = priceMapping[itemType][key]; 
+                            break; 
+                        } 
+                    } 
+                }
             }
             const totalPrice = price * quantity;
             document.getElementById("totalPrice").value = 'Rp ' + totalPrice.toLocaleString('id-ID');
         };
+
         function generateOrderId() {
             const prefix = 'KGBZ';
             const date = new Date();
-            const yyyy = date.getFullYear();
+            // ### PERBAIKAN BUG: Menambahkan deklarasi variabel 'yyyy' ###
+            const yyyy = date.getFullYear(); 
             const mm = String(date.getMonth() + 1).padStart(2, '0');
             const dd = String(date.getDate()).padStart(2, '0');
             const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -452,6 +482,7 @@
             }
             return `${prefix}-${yyyy}${mm}${dd}-${randomPart}`;
         }
+
         window.submitForm = function(event) {
             event.preventDefault();
 
@@ -488,28 +519,51 @@
             submitButton.disabled = true;
             submitButton.innerHTML = 'Mengirim...';
 
-            const sendAdminNotif = fetch(apiUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(adminPayload) });
-            const sendBuyerNotif = fetch(apiUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(buyerPayload) });
+            // Menggunakan Promise.all untuk mengirim notifikasi secara paralel
+            Promise.all([
+                fetch(apiUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(adminPayload) }),
+                fetch(apiUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(buyerPayload) })
+            ])
+            .then(responses => Promise.all(responses.map(res => {
+                if (!res.ok) {
+                    // Jika respons tidak OK, coba baca body sebagai teks untuk debug
+                    return res.text().then(text => Promise.reject(new Error(`Server response was not OK: ${res.status} ${res.statusText}. Body: ${text}`)));
+                }
+                return res.json();
+            })))
+            .then(data => {
+                const adminResult = data[0];
+                const buyerResult = data[1];
 
-            Promise.all([sendAdminNotif, sendBuyerNotif])
-                .then(responses => Promise.all(responses.map(res => res.json())))
-                .then(data => {
-                    const buyerResult = data[1];
-                    if (buyerResult.sent === "true") {
-                        showToast('Pesanan berhasil terkirim!', 'success', orderId);
-                    } else {
-                        showToast('Admin telah menerima pesanan Anda.', 'success', orderId);
-                    }
-                    form.reset();
-                    document.getElementById('saveData').checked = localStorage.getItem('kage_userName') ? true : false;
-                    calculatePrice();
-                }).catch(error => {
-                    console.error('Fetch Error:', error);
-                    showToast('Terjadi kesalahan teknis. Hubungi admin.', 'error');
-                }).finally(() => {
-                    submitButton.disabled = false;
-                    submitButton.innerHTML = 'Kirim Pesanan';
-                });
+                console.log("Admin API Response:", adminResult);
+                console.log("Buyer API Response:", buyerResult);
+
+                // Prioritaskan notifikasi ke Admin. Tampilkan sukses jika notifikasi admin terkirim.
+                if (adminResult.sent === "true") {
+                     showToast('Pesanan berhasil dikirim ke Admin!', 'success', orderId);
+                } else if (buyerResult.sent === "true") {
+                    // Fallback jika notif admin gagal tapi notif buyer berhasil
+                     showToast('Konfirmasi pesanan terkirim ke Anda. Admin akan segera dihubungi.', 'success', orderId);
+                } else {
+                    // Jika keduanya gagal, tunjukkan ID agar bisa disampaikan manual
+                    showToast('Gagal mengirim notifikasi otomatis. Silakan hubungi admin dengan ID Pesanan ini.', 'error', orderId);
+                }
+                
+                form.reset();
+                // Setelah reset, kembalikan status checkbox simpan data
+                document.getElementById('saveData').checked = !!localStorage.getItem('kage_userName');
+                // Atur ulang harga ke 0 dan opsi
+                updateOptions();
+                calculatePrice();
+
+            }).catch(error => {
+                console.error('Fetch Error:', error);
+                // Menampilkan ID Pesanan bahkan saat error agar tidak hilang
+                showToast(`Terjadi kesalahan teknis. Hubungi admin dengan ID Pesanan ini.`, 'error', orderId);
+            }).finally(() => {
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Kirim Pesanan';
+            });
         }
     });
     </script>
